@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    <div id = "google_translate_element"></div>
     <form id="form">
         ชื่อ: <input type="text" id="name"><br>
         วันที่: <input type="date" id="date"><br>
@@ -28,41 +29,55 @@
     <!-- ราคา, สิ่งที่น่าสนใจ / แสดงวันที่ ราคา ตำแหน่ง 5++
     มีหน้าใส่ข้อมูลหรืออ่านข้อมูลมาจากไฟล์ csv
     แสดงข้อมูลเป็นภาษาไทย/อังกฤษ/จีน-->
+    <script>
+        function googleTranslateElementInit(){
+            new google.translate.TranslateElement(
+                { pagelanguage: "en"},
+                "google_translate_element"
+            );
+        }
+    </script>
+    <script src= "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         const map = L.map('map').setView([13.7563, 100.5018], 6);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        /* READ */
-        fetch("/data")
-            .then(r => r.json())
-            .then(data => {
-                data.forEach(item => {
-                    L.marker([item.lat, item.lng])
-                        .addTo(map)
-                        .bindPopup(`
-          <b>วันที่:</b> ${item.date}<br>
-          <b>ราคา:</b> ${item.price} บาท<br>
-          <b>รายละเอียด:</b> ${item.description}
-        `);
-                });
-            });
+        /* ---------- READ ---------- */
+        let data = JSON.parse(localStorage.getItem("mapData")) || [];
 
-        /* WRITE */
-        function save() {
-            fetch("/data", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: name.value,
-                    description: desc.value,
-                    price: price.value,
-                    lat: lat.value,
-                    lng: lng.value
-                })
-            }).then(() => location.reload());
-        }
+        data.forEach(item => {
+            L.marker([item.lat, item.lng])
+                .addTo(map)
+                .bindPopup(`
+      <b>วันที่:</b> ${item.date}<br>
+      <b>ราคา:</b> ${item.price} บาท<br>
+      <b>รายละเอียด:</b> ${item.desc}
+    `);
+        });
+
+        /* ---------- WRITE ---------- */
+        document.getElementById("form").addEventListener("submit", function (e) {
+            e.preventDefault(); // ❗ สำคัญมาก
+
+            const item = {
+                name: document.getElementById("name").value,
+                date: document.getElementById("date").value,
+                price: document.getElementById("price").value,
+                lat: parseFloat(document.getElementById("lat").value),
+                lng: parseFloat(document.getElementById("lng").value),
+                desc: document.getElementById("description").value
+            };
+
+            data.push(item);
+            localStorage.setItem("mapData", JSON.stringify(data));
+
+            alert("บันทึกสำเร็จ ✅");
+            location.reload();
+        });
     </script>
+
 
 </body>
 
