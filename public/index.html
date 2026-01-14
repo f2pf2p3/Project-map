@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Free Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="form">
+        ชื่อ: <input type="text" id="name"><br>
+        วันที่: <input type="date" id="date"><br>
+        ราคา: <input type="number" id="price"><br>
+        Latitude: <input type="text" id="lat"><br>
+        Longitude: <input type="text" id="lng"><br>
+        รายละเอียด: <input type="text" id="description"><br>
+        <button type="submit">บันทึก</button>
+    </form>
+
+
+    <div id="map"></div>
+    <!-- ราคา, สิ่งที่น่าสนใจ / แสดงวันที่ ราคา ตำแหน่ง 5++
+    มีหน้าใส่ข้อมูลหรืออ่านข้อมูลมาจากไฟล์ csv
+    แสดงข้อมูลเป็นภาษาไทย/อังกฤษ/จีน-->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([13.7563, 100.5018], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        /* READ */
+        fetch("/data")
+            .then(r => r.json())
+            .then(data => {
+                data.forEach(item => {
+                    L.marker([item.lat, item.lng])
+                        .addTo(map)
+                        .bindPopup(`
+          <b>วันที่:</b> ${item.date}<br>
+          <b>ราคา:</b> ${item.price} บาท<br>
+          <b>รายละเอียด:</b> ${item.description}
+        `);
+                });
+            });
+
+        /* WRITE */
+        function save() {
+            fetch("/data", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: name.value,
+                    description: desc.value,
+                    price: price.value,
+                    lat: lat.value,
+                    lng: lng.value
+                })
+            }).then(() => location.reload());
+        }
+    </script>
+
+</body>
+
+</html>
