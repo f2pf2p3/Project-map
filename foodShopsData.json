@@ -1,0 +1,32 @@
+[
+  {
+    "id": 0,
+    "name": "Daisachi Shabu",
+    "lat": 13.81501,
+    "lng": 100.04348,
+    "location": "ถนนทรงพล อ.เมืองนครปฐม จ.นครปฐม",
+    "food": ["ชาบู", "บุพเฟ่"],
+    "description": "ไปเป็นแก๊ง อร่อย จ่ายเท่ากัน",
+    "link": "https://www.facebook.com/daisachishabu/?locale=th_TH"
+  },
+  {
+    "id": 1,
+    "name": "ใบเมี่ยง",
+    "lat": 13.81482,
+    "lng": 100.04334,
+    "location": "ถนนทรงพล อ.เมืองนครปฐม จ.นครปฐม",
+    "food": ["หมูห่อใบยอ", "แหนมเนือง", "ก๋วยเตี๋ยวญวน"],
+    "description": "ร้านอาหารสำหรับคนลดน้ำหนัก",
+    "link": "https://www.facebook.com/BaimiangMore/"
+  },
+  {
+    "id": 2,
+    "name": "ร้านก๋วยเตี๋ยวโบราณ",
+    "lat": 13.74582,
+    "lng": 100.08434,
+    "location": "ดอยยายหอม อ.เมืองนครปฐม จ.นครปฐม",
+    "food": ["ก๋วยเตี๋ยวหมู", "เกาเหลาหมูต้มยำ"],
+    "description": "ราคาสบายกระเป๋า",
+    "link": "http://www.noodle.com/example"
+  }
+]

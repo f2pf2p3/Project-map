@@ -3,33 +3,9 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
     <title>Free Map</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        #google_translate_element {
-            padding: 10px;
-        }
-
-        form {
-            padding: 10px;
-            background: #f5f5f5;
-        }
-
-        #map {
-            height: 65vh;
-            width: 100%;
-        }
-
-        input,
-        button {
-            margin: 3px 0;
-        }
-    </style>
+    <script>window.alert("Everything is in local can't edit foodShopsData.json\nOpen with Live Server to see Marker");</script>
 </head>
 
 <body>
@@ -45,104 +21,23 @@
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+    <!-- Input -->
     <form id="form">
-        ID: <input type="text" id="id" required><br>
-        Name: <input type="text" id="name" required><br>
-        Latitude: <input type="text" id="lat" required><br>
-        Longitude: <input type="text" id="lng" required><br>
-        Location: <input type="text" id="Loc" required><br> 
-        Food: <input type="text" id="Food" required><br> 
-        Description:  <input type="text" id="Dis" required><br> 
-        Link:  <input type="text" id="Link" required><br> 
-        <button type="submit">บันทึก</button>
+        Date: <input type="date" id="date"><br>
+        ID: <input type="text" id="id"><br>
+        Name: <input type="text" id="name"><br>
+        Latitude: <input type="text" id="lat"><br>
+        Longitude: <input type="text" id="lng"><br>
+        Location: <input type="text" id="loc"><br>
+        Food: <input type="text" id="food"><br>
+        Description: <input type="text" id="des"><br>
+        Link: <input type="url" id="link"><br>
+        <button onclick="createMarker()">Submit</button>
     </form>
 
     <!-- Map -->
     <div id="map"></div>
-
-    
-
-
-    
-    <script>
-        let map;
-        let activeInfoWindow; // ตัวแปรเก็บ InfoWindow ที่เปิดอยู่ปัจจุบัน
-
-        const foodShopsData =[
-            {
-                id = 
-            }
-        ]
-
-        // --- ส่วนที่ 2: ฟังก์ชันเริ่มต้นแผนที่ ---
-        function initMap() {
-            // 2.1 ตั้งค่าจุดศูนย์กลางและซูมเริ่มต้น (ตั้งไว้ที่กึ่งกลางประเทศไทย)
-            map = new google.maps.Map(document.getElementById("map"), {
-                center: { lat: 13.736717, lng: 100.523186 },
-                zoom: 6, // ระดับการซูมให้เห็นทั่วประเทศ
-                mapTypeControl: false, // ซ่อนปุ่มเปลี่ยนประเภทแผนที่ (ถ้าต้องการ)
-                streetViewControl: false // ซ่อนปุ่ม Street View
-            });
-
-            // 2.2 วนลูปข้อมูลและสร้างหมุด (Marker)
-            foodShopsData.forEach((shop) => {
-                createMarker(shop);
-            });
-        }
-
-        // --- ส่วนที่ 3: ฟังก์ชันสร้างหมุดและหน้าต่างข้อมูล ---
-        function createMarker(shop) {
-            const marker = new google.maps.Marker({
-                position: { lat: shop.lat, lng: shop.lng },
-                map: map,
-                title: shop.name,
-                animation: google.maps.Animation.DROP // เพิ่มอนิเมชั่นตอนหมุดหล่นลงมา
-                // icon: 'path/to/custom-icon.png' // (ทางเลือก) ถ้ามีไอคอนรูปเอง
-            });
-
-            // สร้าง HTML สำหรับแสดงมาตรฐานแบบป้าย (Badge)
-            let standardsHTML = '';
-            if (shop.food && shop.food.length > 0) {
-                standardsHTML = shop.food.map(std => `<span class="standard-badge">${std}</span>`).join('');
-            } else {
-                standardsHTML = '<span style="color:#999;">- ไม่ระบุ -</span>';
-            }
-
-            // สร้างเนื้อหา HTML ภายใน Info Window
-            const contentString = `
-                <div class="info-window-content">
-                    <h3>${shop.name}</h3>
-                    <p><strong>📍 พื้นที่:</strong> ${shop.location}</p>
-                    <p><strong>📜 คำอธิบาย:</strong> ${shop.description}</p>
-                    <p><strong>✅ อาหารแนะนำ:</strong><br>${standardsHTML}</p>
-                    <a href="${shop.link}" target="_blank" class="shop-link-btn">
-                        ไปที่ร้านค้า / โซเชียล 🛒
-                    </a>
-                </div>
-            `;
-
-            const infowindow = new google.maps.InfoWindow({
-                content: contentString,
-            });
-
-            // เพิ่ม Event Listener เมื่อคลิกที่หมุด
-            marker.addListener("click", () => {
-                // ปิด InfoWindow อันเก่าที่เปิดอยู่ก่อน (ถ้ามี)
-                if (activeInfoWindow) {
-                    activeInfoWindow.close();
-                }
-                // เปิด InfoWindow อันใหม่
-                infowindow.open({
-                    anchor: marker,
-                    map,
-                    shouldFocus: false,
-                });
-                // อัปเดตให้เป็น Active
-                activeInfoWindow = infowindow;
-            });
-        }
-    </script>
-
+    <script src="script.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtNntuBq-QLwqvtZBaHTDZu70I-AcT-io&callback=initMap">
     </script>
