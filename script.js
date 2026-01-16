@@ -35,9 +35,11 @@ function createMarker(shop) {
     const info = new google.maps.InfoWindow({
         content: `
             <h3>${shop.name}</h3>
+            <p>${shop.data}</p>
             <p>${shop.description}</p>
             <p><b>อาหาร:</b> ${shop.food.join(", ")}</p>
-            <a href="${shop.link}" target="_blank">ดูร้าน</a>
+            <a href="${shop.link}" target="_blank">ดูร้าน</a><br>
+            <button onclick="deleteShop(${shop.id})">Delete</button>
         `
     });
 
@@ -45,10 +47,47 @@ function createMarker(shop) {
     markers.push(marker);
 }
 
+function deleteShop(id) {
+    if (!confirm("Delete this location?")) return;
+
+    const formData = new FormData();
+    formData.append("id", id);
+
+    fetch("delete.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.status === "deleted") {
+            alert("Deleted");
+            location.reload();
+        }
+    })
+    .catch(err => console.error(err));
+}
+
 // รับค่าจากฟอร์ม
 document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
 
+    const formData = new FormData(this);
+
+    fetch("save.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.status === "success") {
+            alert("Saved successfully!");
+
+            // Reload markers
+            location.reload();
+        }
+    })
+    .catch(err => console.error(err));
+    
     const shop = {
         id: document.getElementById("id").value,
         name: document.getElementById("name").value,
@@ -61,4 +100,5 @@ document.getElementById("form").addEventListener("submit", function (e) {
     };
 
     createMarker(shop);
+
 });
