@@ -32,17 +32,10 @@ if ($jsonText === false) {
     }
 }
 
-// Auto-increment ID from existing data
-$nextId = 1;
-if (!empty($data)) {
-    $maxId = max(array_map(fn($shop) => isset($shop["id"]) ? intval($shop["id"]) : 0, $data));
-    $nextId = $maxId + 1;
-}
-
-// Build new entry
+// Get POST data
 $newShop = [
-    "id" => $nextId,
-    "name" => trim($_POST["name"]),
+    "id" => time(), // simple unique id
+    "name" => $_POST["name"],
     "lat" => floatval($_POST["lat"]),
     "lng" => floatval($_POST["lng"]),
     "location" => trim($_POST["loc"]),
