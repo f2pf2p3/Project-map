@@ -4,28 +4,51 @@ header("Content-Type: application/json");
 // JSON file path
 $file = "foodShopsData.json";
 
-// Read existing data
-$data = json_decode(file_get_contents($file), true);
-if (!$data) {
-    $data = [];
+function jsonResponse($status, $message = null) {
+    $payload = ["status" => $status];
+    if ($message !== null) {
+        $payload["message"] = $message;
+    }
+    echo json_encode($payload);
+    exit;
 }
 
-// Get POST data
+// Required fields check
+$required = ["name", "lat", "lng", "loc", "food", "des", "link"];
+foreach ($required as $field) {
+    if (!isset($_POST[$field]) || trim($_POST[$field]) === "") {
+        jsonResponse("error", "Missing required field: $field");
+    }
+}
+
+// Read existing data safely
+$jsonText = @file_get_contents($file);
+if ($jsonText === false) {
+    $data = [];
+} else {
+    $data = json_decode($jsonText, true);
+    if (!is_array($data)) {
+        $data = [];
+    }
+}
+
+// Build new entry
 $newShop = [
-    "id" => time(), // simple unique id
-    "name" => $_POST["name"],
+    "id" => time(),
+    "name" => trim($_POST["name"]),
     "lat" => floatval($_POST["lat"]),
     "lng" => floatval($_POST["lng"]),
-    "location" => $_POST["loc"],
-    "food" => explode(",", $_POST["food"]),
-    "description" => $_POST["des"],
-    "link" => $_POST["link"]
+    "location" => trim($_POST["loc"]),
+    "food" => array_filter(array_map('trim', explode(",", $_POST["food"])), fn($v) => $v !== ""),
+    "description" => trim($_POST["des"]),
+    "link" => trim($_POST["link"])
 ];
 
-// Add new entry
 $data[] = $newShop;
 
-// Save back to JSON
-file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+$saved = file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+if ($saved === false) {
+    jsonResponse("error", "Could not save data to file.");
+}
 
-echo json_encode(["status" => "success"]);
+jsonResponse("success");
