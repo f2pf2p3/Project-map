@@ -90,7 +90,6 @@ document.getElementById("form").addEventListener("submit", function (e) {
     
     const shop = {
         date: document.getElementById("date").value,
-        id: document.getElementById("id").value,
         name: document.getElementById("name").value,
         lat: parseFloat(document.getElementById("lat").value),
         lng: parseFloat(document.getElementById("lng").value),
