@@ -8,42 +8,58 @@ let foodShopsData = [];
 let selectedLat = null;
 let selectedLng = null;
 let selectedMarker = null;
+let selectedTime = null;
+
+function updateSelectionText() {
+    const coordsText = selectedLat && selectedLng
+        ? `Selected coordinates: ${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`
+        : "Right-click or tap on map to choose location.";
+    const timeText = selectedTime
+        ? `Selected time: ${selectedTime.toLocaleString()} (${selectedTime.toLocaleTimeString()})`
+        : "";
+    document.getElementById("selected-coords").textContent = `${coordsText}${timeText ? " | " + timeText : ""}`;
+}
+
+function setMarkerFromEvent(event) {
+    selectedLat = event.latLng.lat();
+    selectedLng = event.latLng.lng();
+    selectedTime = new Date();
+    document.getElementById("lat").value = selectedLat;
+    document.getElementById("lng").value = selectedLng;
+
+    if (selectedMarker) {
+        selectedMarker.setMap(null);
+    }
+    selectedMarker = new google.maps.Marker({
+        position: { lat: selectedLat, lng: selectedLng },
+        map: map,
+        label: "A"
+    });
+    updateSelectionText();
+}
 
 function initMap() {
-    // 2.1 ตั้งค่าจุดศูนย์กลางและซูมเริ่มต้น (ตั้งไว้ที่กึ่งกลางประเทศไทย)
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: 13.736717, lng: 100.523186 },
-        zoom: 6, // ระดับการซูมให้เห็นทั่วประเทศ
-        mapTypeControl: false, // ซ่อนปุ่มเปลี่ยนประเภทแผนที่ (ถ้าต้องการ)
-        streetViewControl: false // ซ่อนปุ่ม Street View
+        zoom: 6,
+        mapTypeControl: false,
+        streetViewControl: false
     });
 
-    // Right-click to choose coordinates
-    map.addListener("rightclick", (event) => {
-        selectedLat = event.latLng.lat();
-        selectedLng = event.latLng.lng();
-        document.getElementById("lat").value = selectedLat;
-        document.getElementById("lng").value = selectedLng;
-        document.getElementById("selected-coords").textContent =
-            `Selected coordinates: ${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`;
-
-        if (selectedMarker) {
-            selectedMarker.setMap(null);
+    map.addListener("rightclick", setMarkerFromEvent);
+    map.addListener("click", (event) => {
+        if (window.innerWidth <= 900) {
+            setMarkerFromEvent(event);
         }
-        selectedMarker = new google.maps.Marker({
-            position: { lat: selectedLat, lng: selectedLng },
-            map: map,
-            label: "A"
-        });
     });
 
-    // 2.2 วนลูปข้อมูลและสร้างหมุด (Marker)
     fetch("foodShopsData.json")
     .then(res => res.json())
     .then(data => {
         foodShopsData = data;
         data.forEach(shop => createMarker(shop));
     });
+    updateSelectionText();
 }
 
 // --- ส่วนที่ 2: ฟังก์ชันสร้างหมุดและหน้าต่างข้อมูล ---
@@ -57,8 +73,10 @@ function createMarker(shop) {
 
     const info = new google.maps.InfoWindow({
         content: `
-            <h3>${shop.name}</h3>
+            ${shop.thumbnail ? `<img src="${shop.thumbnail}" alt="${shop.name} thumbnail" style="width:100%;max-height:150px;object-fit:cover;margin-bottom:8px;"/>` : ""}
+            <h3 style="margin: 0 0 8px 0;">${shop.name}</h3>
             <p><b>Location:</b> ${shop.location || "(no location)"}</p>
+            ${shop.date ? `<p><b>Time:</b> ${shop.date} (${shop.timezone || "local"})</p>` : ""}
             <p>${shop.description}</p>
             <p><b>อาหาร:</b> ${Array.isArray(shop.food) ? shop.food.join(", ") : shop.food}</p>
             <a href="${shop.link}" target="_blank">ดูร้าน</a><br>
@@ -93,24 +111,33 @@ document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
 
     if (!selectedLat || !selectedLng) {
-        alert("Please right-click on the map to select a location first.");
+        alert("Please right-click or tap on the map to choose a location first.");
         return;
     }
 
-    const shop = {
-        name: document.getElementById("name").value,
-        lat: selectedLat,
-        lng: selectedLng,
-        loc: document.getElementById("loc").value,
-        food: document.getElementById("food").value,
-        des: document.getElementById("des").value,
-        link: document.getElementById("link").value
-    };
+    if (!selectedTime) {
+        selectedTime = new Date();
+    }
+
+    const formData = new FormData();
+    formData.append("name", document.getElementById("name").value);
+    formData.append("loc", document.getElementById("loc").value);
+    formData.append("food", document.getElementById("food").value);
+    formData.append("des", document.getElementById("des").value);
+    formData.append("link", document.getElementById("link").value);
+    formData.append("lat", selectedLat);
+    formData.append("lng", selectedLng);
+    formData.append("date", selectedTime.toLocaleString());
+    formData.append("timezone", Intl.DateTimeFormat().resolvedOptions().timeZone);
+
+    const fileInput = document.getElementById("thumbnail");
+    if (fileInput.files && fileInput.files.length > 0) {
+        formData.append("thumbnail", fileInput.files[0]);
+    }
 
     fetch("/save", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(shop)
+        body: formData
     })
     .then(res => res.json())
     .then(result => {
@@ -118,7 +145,7 @@ document.getElementById("form").addEventListener("submit", function (e) {
             alert("Saved successfully!");
             location.reload();
         } else {
-            alert("Save failed");
+            alert("Save failed: " + (result.message || "unknown"));
         }
     })
     .catch(err => {

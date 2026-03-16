@@ -12,5 +12,35 @@
     ],
     "description": "ไปเป็นแก๊ง อร่อย จ่ายเท่ากัน",
     "link": "https://www.facebook.com/daisachishabu/?locale=th_TH"
+  },
+  {
+    "id": 1773671235171,
+    "name": "ThumbnailTest",
+    "thumbnail": "https://via.placeholder.com/150",
+    "lat": 13.75,
+    "lng": 100.5,
+    "location": "Bangkok",
+    "food": [
+      "Thai"
+    ],
+    "description": "Test desc",
+    "link": "https://example.com",
+    "date": "2026-03-16 12:00",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 1773671612194,
+    "name": "abc",
+    "thumbnail": "pic/1773671612191-rzi4i8.png",
+    "lat": 13.608602006469987,
+    "lng": 100.03731677584317,
+    "location": "a",
+    "food": [
+      "a"
+    ],
+    "description": "a",
+    "link": "https://www.youtube.com/watch?v=atx7AlYB_z4&list=RDatx7AlYB_z4&start_radio=1",
+    "date": "3/16/2026, 9:33:24 PM",
+    "timezone": "Asia/Bangkok"
   }
 ]
