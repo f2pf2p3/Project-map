@@ -24,12 +24,13 @@
     <form id="form">
         Date: <input type="date" id="date"><br>
         Name: <input type="text" id="name"><br>
-        Latitude: <input type="number" id="lat"><br>
-        Longitude: <input type="number" id="lng"><br>
         Location: <input type="text" id="loc"><br>
         Food: <input type="text" id="food"><br>
         Description: <input type="text" id="des"><br>
         Link: <input type="url" id="link"><br>
+        <input type="hidden" id="lat" name="lat">
+        <input type="hidden" id="lng" name="lng">
+        <p id="selected-coords">Right-click on the map to choose latitude/longitude.</p>
         <button type="submit">Submit</button>
     </form>
 
