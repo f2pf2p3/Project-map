@@ -50,12 +50,10 @@ function createMarker(shop) {
 function deleteShop(id) {
     if (!confirm("Delete this location?")) return;
 
-    const formData = new FormData();
-    formData.append("id", id);
-
-    fetch("delete.php", {
+    fetch("/delete", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
     })
     .then(res => res.json())
     .then(result => {
@@ -71,34 +69,32 @@ function deleteShop(id) {
 document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const formData = new FormData(this);
+    const shop = {
+        name: document.getElementById("name").value,
+        lat: document.getElementById("lat").value,
+        lng: document.getElementById("lng").value,
+        loc: document.getElementById("loc").value,
+        food: document.getElementById("food").value,
+        des: document.getElementById("des").value,
+        link: document.getElementById("link").value
+    };
 
-    fetch("save.php", {
+    fetch("/save", {
         method: "POST",
-        body: formData
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(shop)
     })
     .then(res => res.json())
     .then(result => {
         if (result.status === "success") {
             alert("Saved successfully!");
-
-            // Reload markers
             location.reload();
+        } else {
+            alert("Save failed");
         }
     })
-    .catch(err => console.error(err));
-    
-    const shop = {
-        date: document.getElementById("date").value,
-        name: document.getElementById("name").value,
-        lat: parseFloat(document.getElementById("lat").value),
-        lng: parseFloat(document.getElementById("lng").value),
-        location: document.getElementById("loc").value,
-        food: document.getElementById("food").value.split(","),
-        description: document.getElementById("des").value,
-        link: document.getElementById("link").value
-    };
-
-    createMarker(shop);
-
+    .catch(err => {
+        console.error(err);
+        alert("Save failed");
+    });
 });
