@@ -1,46 +1,224 @@
 [
   {
-    "date": "2026-01-16",
-    "id": 0,
+    "id": 1,
     "name": "Daisachi Shabu",
     "lat": 13.81501,
     "lng": 100.04348,
     "location": "ถนนทรงพล อ.เมืองนครปฐม จ.นครปฐม",
     "food": [
       "ชาบู",
-      "บุพเฟ่"
+      "บุฟเฟ่ต์"
     ],
     "description": "ไปเป็นแก๊ง อร่อย จ่ายเท่ากัน",
-    "link": "https://www.facebook.com/daisachishabu/?locale=th_TH"
-  },
-  {
-    "id": 1773671235171,
-    "name": "ThumbnailTest",
-    "thumbnail": "https://via.placeholder.com/150",
-    "lat": 13.75,
-    "lng": 100.5,
-    "location": "Bangkok",
-    "food": [
-      "Thai"
-    ],
-    "description": "Test desc",
-    "link": "https://example.com",
-    "date": "2026-03-16 12:00",
+    "link": "https://www.facebook.com/daisachishabu",
+    "date": "2026-01-16",
     "timezone": "Asia/Bangkok"
   },
   {
-    "id": 1773671612194,
-    "name": "abc",
-    "thumbnail": "pic/1773671612191-rzi4i8.png",
-    "lat": 13.608602006469987,
-    "lng": 100.03731677584317,
-    "location": "a",
+    "id": 2,
+    "name": "ตี๋น้อย สุกี้",
+    "lat": 13.728,
+    "lng": 100.525,
+    "location": "กรุงเทพ",
     "food": [
-      "a"
+      "สุกี้",
+      "บุฟเฟ่ต์"
     ],
-    "description": "a",
-    "link": "https://www.youtube.com/watch?v=atx7AlYB_z4&list=RDatx7AlYB_z4&start_radio=1",
-    "date": "3/16/2026, 9:33:24 PM",
+    "description": "ถูกและคุ้มมาก",
+    "link": "https://example.com",
+    "date": "2026-02-01",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 3,
+    "name": "After You Dessert Cafe",
+    "lat": 13.746,
+    "lng": 100.534,
+    "location": "สยาม กรุงเทพ",
+    "food": [
+      "ของหวาน",
+      "toast"
+    ],
+    "description": "ขนมหวานชื่อดัง",
+    "link": "https://example.com",
+    "date": "2026-02-10",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 4,
+    "name": "โอ้กะจู๋",
+    "lat": 18.7883,
+    "lng": 98.9853,
+    "location": "เชียงใหม่",
+    "food": [
+      "สลัด",
+      "healthy"
+    ],
+    "description": "สายคลีนต้องมา",
+    "link": "https://example.com",
+    "date": "2026-02-15",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 5,
+    "name": "เจ๊ไฝ",
+    "lat": 13.753,
+    "lng": 100.501,
+    "location": "ประตูผี กรุงเทพ",
+    "food": [
+      "ซีฟู้ด",
+      "มิชลิน"
+    ],
+    "description": "ร้านระดับมิชลิน",
+    "link": "https://example.com",
+    "date": "2026-02-20",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 6,
+    "name": "หมูทอดเจ๊จง",
+    "lat": 13.723,
+    "lng": 100.518,
+    "location": "พระราม 4 กรุงเทพ",
+    "food": [
+      "หมูทอด",
+      "ข้าวราด"
+    ],
+    "description": "ถูก อร่อย เร็ว",
+    "link": "https://example.com",
+    "date": "2026-02-22",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 7,
+    "name": "Pizza Company",
+    "lat": 13.736,
+    "lng": 100.523,
+    "location": "หลายสาขา",
+    "food": [
+      "pizza",
+      "fastfood"
+    ],
+    "description": "พิซซ่าชื่อดัง",
+    "link": "https://example.com",
+    "date": "2026-02-25",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 8,
+    "name": "MK Restaurant",
+    "lat": 13.75,
+    "lng": 100.51,
+    "location": "ทั่วประเทศ",
+    "food": [
+      "สุกี้"
+    ],
+    "description": "สุกี้ครอบครัว",
+    "link": "https://example.com",
+    "date": "2026-03-01",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 9,
+    "name": "KFC",
+    "lat": 13.7,
+    "lng": 100.55,
+    "location": "หลายสาขา",
+    "food": [
+      "ไก่ทอด",
+      "fastfood"
+    ],
+    "description": "ไก่ทอดระดับโลก",
+    "link": "https://example.com",
+    "date": "2026-03-02",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 10,
+    "name": "ร้านลาบเป็ดอุดร",
+    "lat": 17.4138,
+    "lng": 102.787,
+    "location": "อุดรธานี",
+    "food": [
+      "ลาบ",
+      "อีสาน"
+    ],
+    "description": "แซ่บถึงใจ",
+    "link": "https://example.com",
+    "date": "2026-03-05",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 11,
+    "name": "Seafood Phuket",
+    "lat": 7.8804,
+    "lng": 98.3923,
+    "location": "ภูเก็ต",
+    "food": [
+      "ซีฟู้ด"
+    ],
+    "description": "สดจากทะเล",
+    "link": "https://example.com",
+    "date": "2026-03-07",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 12,
+    "name": "Café Amazon",
+    "lat": 13.73,
+    "lng": 100.52,
+    "location": "ทั่วประเทศ",
+    "food": [
+      "กาแฟ",
+      "เครื่องดื่ม"
+    ],
+    "description": "ร้านกาแฟยอดนิยม",
+    "link": "https://example.com",
+    "date": "2026-03-08",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 13,
+    "name": "Shinkanzen Sushi",
+    "lat": 13.74,
+    "lng": 100.53,
+    "location": "กรุงเทพ",
+    "food": [
+      "ซูชิ",
+      "ญี่ปุ่น"
+    ],
+    "description": "ซูชิราคาดี",
+    "link": "https://example.com",
+    "date": "2026-03-10",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 14,
+    "name": "Bar B Q Plaza",
+    "lat": 13.75,
+    "lng": 100.54,
+    "location": "ทั่วประเทศ",
+    "food": [
+      "ปิ้งย่าง"
+    ],
+    "description": "หมูกระทะในห้าง",
+    "link": "https://example.com",
+    "date": "2026-03-12",
+    "timezone": "Asia/Bangkok"
+  },
+  {
+    "id": 15,
+    "name": "Sizzler",
+    "lat": 13.76,
+    "lng": 100.55,
+    "location": "กรุงเทพ",
+    "food": [
+      "สเต็ก",
+      "สลัด"
+    ],
+    "description": "สลัดบาร์",
+    "link": "https://example.com",
+    "date": "2026-03-14",
     "timezone": "Asia/Bangkok"
   }
 ]

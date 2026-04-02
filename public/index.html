@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
     <title>Free Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -20,11 +21,15 @@
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+
     <!-- Input -->
     <form id="form" enctype="multipart/form-data">
+        <div id="dragHandle"></div>
+        Find Location: <input id="searchBox" type="text" placeholder="ค้นหาสถานที่..." onkeyup="searchMarker()">
+        <p>----------------------------------------------------------</p>
         Name: <input type="text" id="name"><br>
         Thumbnail (upload): <input type="file" id="thumbnail" accept="image/*"><br>
-        Location: <input type="text" id="loc"><br>
+        Location address: <input type="text" id="loc"><br>
         Food: <input type="text" id="food"><br>
         Description: <input type="text" id="des"><br>
         Link: <input type="url" id="link" placeholder="https://..."><br>
@@ -39,8 +44,8 @@
     <script src="script.js"></script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtNntuBq-QLwqvtZBaHTDZu70I-AcT-io&callback=initMap">
-    </script>
-
+        </script>
+    
 </body>
 
 </html>

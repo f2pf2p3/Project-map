@@ -10,14 +10,104 @@ let selectedLng = null;
 let selectedMarker = null;
 let selectedTime = null;
 
+function initMap() {
+    const defaultLocation = { lat: 13.736717, lng: 100.523186 };
+
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: defaultLocation,
+        zoom: 6,
+        mapTypeControl: false,
+        streetViewControl: false
+    });
+
+    // 📱 mobile tap
+    map.addListener("click", (event) => {
+        if (window.innerWidth <= 900) {
+            setMarkerFromEvent(event);
+        }
+    });
+
+    //  desktop right click
+    map.addListener("rightclick", setMarkerFromEvent);
+
+    //  autocomplete
+    const input = document.getElementById("searchBox");
+    const autocomplete = new google.maps.places.Autocomplete(input);
+
+    autocomplete.bindTo("bounds", map);
+
+    autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.geometry) return;
+
+        map.panTo(place.geometry.location);
+        map.setZoom(15);
+
+        if (marker) marker.setMap(null);
+
+        marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
+    });
+
+    //  โหลด marker จาก JSON
+    fetch("foodShopsData.json")
+        .then(res => res.json())
+        .then(data => {
+            foodShopsData = data;
+            data.forEach(shop => createMarker(shop));
+        });
+
+    updateSelectionText();
+}
+
+const form = document.getElementById("form");
+const handle = document.getElementById("dragHandle");
+
+let isDragging = false;
+let startY = 0;
+let startHeight = 0;
+
+handle.addEventListener("touchstart", (e) => {
+    isDragging = true;
+    startY = e.touches[0].clientY;
+    startHeight = form.offsetHeight;
+});
+
+document.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+
+    const currentY = e.touches[0].clientY;
+    const diff = startY - currentY;
+
+    let newHeight = startHeight + diff;
+
+    // จำกัดความสูง
+    const minHeight = window.innerHeight * 0.2;
+    const maxHeight = window.innerHeight * 0.9;
+
+    if (newHeight < minHeight) newHeight = minHeight;
+    if (newHeight > maxHeight) newHeight = maxHeight;
+
+    form.style.height = newHeight + "px";
+});
+
+document.addEventListener("touchend", () => {
+    isDragging = false;
+});
+
 function updateSelectionText() {
     const coordsText = selectedLat && selectedLng
-        ? `Selected coordinates: ${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`
+        ? `Selected coordinates:<br>${selectedLat.toFixed(6)}, ${selectedLng.toFixed(6)}`
         : "Right-click or tap on map to choose location.";
+
     const timeText = selectedTime
-        ? `Selected time: ${selectedTime.toLocaleString()} (${selectedTime.toLocaleTimeString()})`
+        ? `Selected time:<br>${selectedTime.toLocaleString()} (${selectedTime.toLocaleTimeString()})`
         : "";
-    document.getElementById("selected-coords").textContent = `${coordsText}${timeText ? " | " + timeText : ""}`;
+
+    document.getElementById("selected-coords").innerHTML =
+        `${coordsText}${timeText ? "<br><br>" + timeText : ""}`;
 }
 
 function setMarkerFromEvent(event) {
@@ -54,11 +144,11 @@ function initMap() {
     });
 
     fetch("foodShopsData.json")
-    .then(res => res.json())
-    .then(data => {
-        foodShopsData = data;
-        data.forEach(shop => createMarker(shop));
-    });
+        .then(res => res.json())
+        .then(data => {
+            foodShopsData = data;
+            data.forEach(shop => createMarker(shop));
+        });
     updateSelectionText();
 }
 
@@ -96,24 +186,56 @@ function deleteShop(id) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
     })
-    .then(res => res.json())
-    .then(result => {
-        if (result.status === "deleted") {
-            alert("Deleted");
-            location.reload();
+        .then(res => res.json())
+        .then(result => {
+            if (result.status === "deleted") {
+                alert("Deleted");
+                location.reload();
+            }
+        })
+        .catch(err => console.error(err));
+}
+
+function searchMarker() {
+    const keyword = document.getElementById("searchBox").value.toLowerCase().trim();
+    const keywords = keyword.split(/\s+/);
+
+    markers.forEach((marker, index) => {
+        const shop = foodShopsData[index];
+
+        //  ดึง text ทั้งหมด
+        let locationText = (shop.location || "").toLowerCase();
+
+        //  ตัดคำพวก "จ." "อ." ออก
+        locationText = locationText
+            .replace(/จ\./g, "")
+            .replace(/อ\./g, "")
+            .replace(/ตำบล|อำเภอ|จังหวัด/g, "");
+
+        const text = (
+            shop.name + " " +
+            locationText + " " +
+            (Array.isArray(shop.food) ? shop.food.join(" ") : shop.food || "")
+        ).toLowerCase();
+
+        const match = keywords.every(k => text.includes(k));
+
+        marker.setVisible(match);
+
+        if (match && keyword !== "") {
+            map.panTo(marker.getPosition());
+            map.setZoom(12);
         }
-    })
-    .catch(err => console.error(err));
+    });
+
+    if (!keyword) {
+        markers.forEach(marker => marker.setVisible(true));
+    }
 }
 
 // รับค่าจากฟอร์ม
 document.getElementById("form").addEventListener("submit", function (e) {
     e.preventDefault();
-
-    if (!selectedLat || !selectedLng) {
-        alert("Please right-click or tap on the map to choose a location first.");
-        return;
-    }
 
     if (!selectedTime) {
         selectedTime = new Date();
@@ -139,17 +261,17 @@ document.getElementById("form").addEventListener("submit", function (e) {
         method: "POST",
         body: formData
     })
-    .then(res => res.json())
-    .then(result => {
-        if (result.status === "success") {
-            alert("Saved successfully!");
-            location.reload();
-        } else {
-            alert("Save failed: " + (result.message || "unknown"));
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Save failed");
-    });
+        .then(res => res.json())
+        .then(result => {
+            if (result.status === "success") {
+                alert("Saved successfully!");
+                location.reload();
+            } else {
+                alert("Save failed: " + (result.message || "unknown"));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Save failed");
+        });
 });
